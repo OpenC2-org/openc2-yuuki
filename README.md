@@ -1,4 +1,4 @@
-# Yuuki
+# openc2-yuuki
 
 > "My family name is Yugano. My given name is Yuuki. I have no redeeming qualities.
 > ...
@@ -9,7 +9,7 @@ Yuuki is a Python package for building an OpenC2 proxy.
 
 ## Usage
 
-Create a python virtual environment and pip install yuuki. (Yuuki is alpha software; I strongly recommend not installing globally.)
+Create a python virtual environment and pip install yuuki. (Yuuki is alpha software; installing globally is not recommended.)
 
 Start a proxy:
 

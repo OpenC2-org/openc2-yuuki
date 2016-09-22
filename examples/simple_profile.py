@@ -11,11 +11,15 @@ def deny(target, actuator, modifier):
 
 @action(target="openc2:domain")
 def allow(target, actuator, modifier):
+    """
+    Docstring for each openc2 action is used for QUERY openc2:openc2
+    """
     return "Allowing domain {}".format(target['URI'])
 
 
 @action(target="openc2:user")
 def deny(target, actuator, modifier):
+    """Each instance of the multimethod can have a unique docstring"""
     return "Denying user {}".format(target['name'])
 
 

@@ -5,11 +5,29 @@
 > This is because the Internet has ruined my way of looking at the world."
 > - from A Girl Corrupted by the Internet is the Summoned Hero?! by Eliezer Yudkowsky
 
-Yuuki is a Python package for building an OpenC2 proxy.
+Yuuki is a Python package for building an OpenC2 proxy. Yuuki is currently compatible with Python 2.7 only.
 
-## Usage
+## Getting Started
 
 Create a python virtual environment and pip install yuuki. (Yuuki is alpha software; installing globally is not recommended.)
+
+Install virtualenv via pip:
+
+    $ pip install virtualenv
+
+Create and activate a python virtual environment:
+    
+    $ mkdir test_yuuki
+    $ cd test_yuuki
+    $ virtualenv venv
+    $ source venv/bin/activate
+
+Download and install yuuki
+    
+    $ git clone https://github.com/OpenC2-org/openc2-yuuki.git
+    $ pip install ./openc2-yuuki
+
+## Usage
 
 Start a proxy:
 

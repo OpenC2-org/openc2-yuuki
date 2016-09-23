@@ -28,7 +28,7 @@ def set(target, actuator, modifier):
     SET sdn:flow {"entry": {"switch": "00:00:00:00:00:00:00:01", "name": ...}}
     """
     uri = 'http://{}:{}/wm/{}/json'.format(CONTROLLER_IP, PORT, MODULE)
-    r = requests.post(uri, data=target['entry'])
+    r = requests.post(uri, json=target['entry'])
 
     return r.status_code
 
@@ -42,7 +42,7 @@ def delete(target, actuator, modifier):
     DELETE sdn:flow {"entry": {"name": "flow-mod-1"}}
     """
     uri = 'http://{}:{}/wm/{}/json'.format(CONTROLLER_IP, PORT, MODULE)
-    r = requests.delete(uri, data=target['entry'])
+    r = requests.delete(uri, json=target['entry'])
 
     return r.status_code
 
@@ -163,7 +163,7 @@ def start(target, actuator, modifier):
     START sdn:firewall {}
     """
     uri = 'http://{}:{}/wm/firewall/enable/json'.format(CONTROLLER_IP, PORT)
-    r = requests.put(uri, data="")
+    r = requests.put(uri, json="")
 
     return r.status_code
 
@@ -177,7 +177,7 @@ def stop(target, actuator, modifier):
     STOP sdn:firewall {}
     """
     uri = 'http://{}:{}/wm/firewall/disable/json'.format(CONTROLLER_IP, PORT)
-    r = requests.put(uri, data="")
+    r = requests.put(uri, json="")
     
     return r.status_code
 
@@ -224,7 +224,7 @@ def set(target, actuator, modifier):
     SET sdn:firewall.rules {"rule": {"field": "value", ...}}
     """
     uri = 'http://{}:{}/wm/firewall/rules/json'.format(CONTROLLER_IP, PORT)
-    r = requests.post(uri, data=target["rule"])
+    r = requests.post(uri, json=target["rule"])
     
     return r.status_code
 
@@ -238,7 +238,7 @@ def delete(target, actuator, modifier):
     DELETE sdn:firewall.rules {"ruleid": "<int>"}
     """
     uri = 'http://{}:{}/wm/firewall/rules/json'.format(CONTROLLER_IP, PORT)
-    r = requests.delete(uri, data={"ruleid": target["ruleid"]})
+    r = requests.delete(uri, json={"ruleid": target["ruleid"]})
 
     return r.status_code
 

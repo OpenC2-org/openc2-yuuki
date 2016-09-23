@@ -21,7 +21,7 @@ CARRIERS = {"AT&T": "txt.att.net",
 
 
 @action(target='openc2:cellphone')
-def alert(target, actuator, modifier):
+def notify(target, actuator, modifier):
     """
     Send an alert to a cellphone.
     
@@ -33,7 +33,14 @@ def alert(target, actuator, modifier):
     to = "{}@{}".format(target['number'], CARRIERS[target['carrier']])
     subject = "OpenC2 Alert"
     message = target['message']
-    mailcmd = "echo -e '{}' | mail -s '{}' {}".format(message, subject, to)
+    mailcmd = "echo '{}' | mail -s '{}' {}".format(message, subject, to)
 
     return call(mailcmd, shell=True)
+
+
+@action(target='openc2:domain')
+def mitigate(target, actuator, modifier):
+    """Some documentation about mitigation"""
+    return "I can't do that, Dave"
+
 

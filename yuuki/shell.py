@@ -12,6 +12,7 @@ HEADERS = {"Content-Type": "application/json"}
 
 ACTUATOR = r"\A(\S+)\s+(\S+)\s+(\{.*\})\s+(\S+)\s+(\{.*\})(\s+.*)?\Z"
 NO_ACTUATOR = r"\A(\S+)\s+(\S+)\s+(\{.*\})(\s+.*)?\Z"
+TARGET_ONLY = r"\A(\S+)\s+(\S+)\Z"
 
 
 def main():
@@ -54,6 +55,7 @@ def parse(cmd):
     """
     actuator_match = re.match(ACTUATOR, cmd)
     non_actuator_match = re.match(NO_ACTUATOR, cmd)
+    target_only_match = re.match(TARGET_ONLY, cmd)
 
     action = None
     target_type = None
@@ -81,6 +83,11 @@ def parse(cmd):
         target = yaml.load(groups[2])
 
         modifier = yaml.load("{{{}}}".format(groups[3]))
+    elif target_only_match:
+        groups = target_only_match.groups("")
+
+        action = string.lower(groups[0])
+        target_type = groups[1]
     else:
         raise SyntaxError("Invalid OpenC2 command")
 

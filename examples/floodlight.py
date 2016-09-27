@@ -1,12 +1,11 @@
 import requests
 from yuuki.dispatch import action
 
-
 # Static Entry Pusher has been renamed in the Floodlight API
 # 'staticentrypusher' on master
 # 'staticflowpusher' v1.0 - v1.2
 # 'staticflowentrypusher' v0.91
-MODULE = 'staticflowpusher'
+MODULE = 'staticentrypusher'
 
 # Floodlight controller IP
 CONTROLLER_IP = 'localhost'
@@ -47,22 +46,6 @@ def delete(target, actuator, modifier):
     return r.status_code
 
 
-@action(target='sdn:switch')
-def delete(target, actuator, modifier):
-    """
-    Clear all static flows entries on target["switch"]
-
-    Example invocations:
-    DELETE sdn:switch {"switch": "00:00:00:00:00:00:00:01"}
-    DELETE sdn:switch {"switch": "all"}
-    """
-    uri = 'http://{}:{}/wm/{}/clear/{}/json'.format(
-            CONTROLLER_IP, PORT, MODULE, target["switch"])
-    r = requests.get(uri)
-
-    return r.status_code
-
-
 @action(target='sdn:flow')
 def query(target, actuator, modifier):
     """
@@ -79,7 +62,7 @@ def query(target, actuator, modifier):
     return r.json()
 
 
-@action(target='sdn:controller.switches')
+@action(target='sdn:switch')
 def query(target, actuator, modifier):
     """
     Get a summary of all switches.
@@ -87,7 +70,7 @@ def query(target, actuator, modifier):
     Example invocation:
     QUERY sdn:controller {}
     """
-    uri = 'http://{}:{}/wm/core/ctonroller/switches/json'.format(
+    uri = 'http://{}:{}/wm/core/controller/switches/json'.format(
             CONTROLLER_IP, PORT)
     r = requests.get(uri)
 
@@ -162,8 +145,9 @@ def start(target, actuator, modifier):
     Example invocation:
     START sdn:firewall {}
     """
-    uri = 'http://{}:{}/wm/firewall/enable/json'.format(CONTROLLER_IP, PORT)
-    r = requests.put(uri, json="")
+    uri = 'http://{}:{}/wm/firewall/module/enable/json'.format(
+            CONTROLLER_IP, PORT)
+    r = requests.put(uri, data="")
 
     return r.status_code
 
@@ -176,8 +160,9 @@ def stop(target, actuator, modifier):
     Example invocation:
     STOP sdn:firewall {}
     """
-    uri = 'http://{}:{}/wm/firewall/disable/json'.format(CONTROLLER_IP, PORT)
-    r = requests.put(uri, json="")
+    uri = 'http://{}:{}/wm/firewall/module/disable/json'.format(
+            CONTROLLER_IP, PORT)
+    r = requests.put(uri, data="")
     
     return r.status_code
 

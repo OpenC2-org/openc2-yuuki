@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 
 import argparse
+import os
 
 from flask import Flask, jsonify, request, abort
 from dispatch import Dispatcher
+from ConfigParser import SafeConfigParser
 
 app = Flask(__name__)
 
 PROFILE = None
-
 
 @app.route('/')
 def ok():
@@ -43,31 +44,68 @@ def recieve():
     """
     if not request.json:
         abort(400)
-    
+
     response = PROFILE.dispatch(request.get_json())
     return jsonify(response), 200
 
+def parse_config(config_file):
+
+    """
+    Receive a file path and parse it to a dict
+    """
+
+    config_reader = SafeConfigParser()
+    config_reader.read(config_file)
+    config_dict = {}
+
+    for section_name in config_reader.sections():
+
+        config_dict[section_name] = {}
+
+        for name, value in config_reader.items(section_name):
+
+            config_dict[section_name][name] = value
+    
+    return config_dict
 
 def main():
+
     """
     Parse configuration and start flask app.
-
-    WARNING: only a single profile file is supported at this time
     """
+    
     parser = argparse.ArgumentParser()
-    parser.add_argument('--port', type=int, default=9001,
-                        help="port to listen on (default=9001)")
-    parser.add_argument('profiles', nargs='+',
-                        help="full path to OpenC2 profile")
+
+    parser.add_argument('--conf', type=str, default="yuuki.conf",help="Location of yuuki.conf")
 
     args = parser.parse_args()
-    
-    global PROFILE
-    PROFILE = Dispatcher(*args.profiles)
 
-    app.run(port=args.port)
+    if os.path.isfile(args.conf):
+
+        app.config["yuuki"] = parse_config(args.conf)
+
+    else:
+
+        # Let me know how you want to handle exceptions
+        raise(Exception("Config file not found")) 
+
+    # Load profiles
+    profile_list = []
+    for profile in app.config["yuuki"]["profiles"]:
+
+        # TODO - Add better logging
+        print " * Loading profile %s" % profile
+        profile_list.append(app.config["yuuki"]["profiles"][profile])
+        
+    # Make dispatcher with loaded modules    
+    global PROFILE 
+    PROFILE = Dispatcher(profile_list)
+
+    # Run the app    
+    app.run(port=int(app.config["yuuki"]["server"]["port"]),host=app.config["yuuki"]["server"]["host"])
 
 
 if __name__ == "__main__":
+
     main()
 

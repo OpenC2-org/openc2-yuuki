@@ -43,6 +43,7 @@ def main():
             break
         except KeyboardInterrupt:
             print "^C"
+            break
         except Exception as e:
             print "{}: {}".format(e.__class__.__name__, str(e))
 

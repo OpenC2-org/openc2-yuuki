@@ -72,37 +72,59 @@ def main():
 
     """
     Parse configuration and start flask app.
+    -
+    -    WARNING: Multiple profiles are currently subtly broken in dispatch.py; 
+         spreading the logic for different actions across multiple .py files should work correctly,
+         but spreading the logic for the same action across multiple files will not; 
+         only the target/actuator types from the last profile will be run.
     """
-    
-    parser = argparse.ArgumentParser()
+    global PROFILE
 
-    parser.add_argument('--conf', type=str, default="yuuki.conf",help="Location of yuuki.conf")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--port', type=int, default=9001, help="port to listen on (default=9001)")    
+
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--conf', default=None)
+    group.add_argument('--profiles', nargs='+', default=None)
+
 
     args = parser.parse_args()
 
-    if os.path.isfile(args.conf):
+    if args.profiles:
 
-        app.config["yuuki"] = parse_config(args.conf)
+        # If a profile is specified by switches
+
+        # Make dispatcher with loaded modules     
+        PROFILE = Dispatcher(args.profiles)
+
+        # Run the app    
+        app.run(port=int(args.port),host="127.0.0.1")
 
     else:
 
-        # Let me know how you want to handle exceptions
-        raise(Exception("Config file not found")) 
+        # If a config file is specified
+        if os.path.isfile(args.conf):
 
-    # Load profiles
-    profile_list = []
-    for profile in app.config["yuuki"]["profiles"]:
+            app.config["yuuki"] = parse_config(args.conf)
 
-        # TODO - Add better logging
-        print " * Loading profile %s" % profile
-        profile_list.append(app.config["yuuki"]["profiles"][profile])
+        else:
+
+            raise(Exception("Config file not found")) 
+
+        # Load profiles
+        profile_list = []
+
+        for profile in app.config["yuuki"]["profiles"]:
+           
+            print " * Loading profile %s" % profile
+
+            profile_list.append(app.config["yuuki"]["profiles"][profile])
         
-    # Make dispatcher with loaded modules    
-    global PROFILE 
-    PROFILE = Dispatcher(profile_list)
+        # Make dispatcher with loaded modules    
+        PROFILE = Dispatcher(profile_list)
 
-    # Run the app    
-    app.run(port=int(app.config["yuuki"]["server"]["port"]),host=app.config["yuuki"]["server"]["host"])
+        # Run the app:   
+        app.run(port=int(app.config["yuuki"]["server"]["port"]),host=app.config["yuuki"]["server"]["host"])
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='yuuki',
-      version='0.1a2',
+      version='0.1a3',
       description='OpenC2 proxy',
       author='Joshua Brule',
       author_email='jtcbrule@gmail.com',

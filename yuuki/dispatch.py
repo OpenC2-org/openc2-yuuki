@@ -11,7 +11,7 @@ class Dispatcher(object):
     TODO: fix bug - spreading the logic for one action across multiple
     modules does not work properly
     """
-    def __init__(self, *profiles):
+    def __init__(self, profiles):
         self.modules = collections.deque()
         for module in profiles:
             self.modules.appendleft(imp.load_source('profile', module))

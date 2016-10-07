@@ -81,7 +81,7 @@ def main():
     global PROFILE
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--port', type=int, default=9001, help="port to listen on (default=9001)")    
+    parser.add_argument('--port', type=int, default=None, help="port to listen on (default=9001)")    
 
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--conf', default=None)
@@ -98,7 +98,13 @@ def main():
         PROFILE = Dispatcher(args.profiles)
 
         # Run the app    
-        app.run(port=int(args.port),host="127.0.0.1")
+        if args.port:
+
+		app.run(port=int(args.port),host="127.0.0.1")
+
+	else:
+
+		app.run(port=9001,host="127.0.0.1")	
 
     else:
 
@@ -123,9 +129,14 @@ def main():
         # Make dispatcher with loaded modules    
         PROFILE = Dispatcher(profile_list)
 
-        # Run the app:   
-        app.run(port=int(app.config["yuuki"]["server"]["port"]),host=app.config["yuuki"]["server"]["host"])
+	if args.port:
 
+        	# Run the app:   
+       		app.run(port=int(args.port),host=app.config["yuuki"]["server"]["host"])
+	else:
+
+		# Run the app:
+                app.run(port=int(app.config["yuuki"]["server"]["port"]),host=app.config["yuuki"]["server"]["host"])
 
 if __name__ == "__main__":
 

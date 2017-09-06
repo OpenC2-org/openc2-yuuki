@@ -1,3 +1,5 @@
+**This project has moved to https://github.com/oasis-open/openc2-yuuki**
+
 # openc2-yuuki
 
 > "My family name is Yugano. My given name is Yuuki. I have no redeeming qualities.
